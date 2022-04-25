@@ -1,0 +1,71 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl"]
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Stats {
+  id               Int      @id @default(autoincrement())
+  project_id       Int?
+  price            Float?
+  marketcap        Float?
+  holders          Float?
+  pair_price       Float?
+  liquidity        Float?
+  average_holdings Float?
+  treasury         Float?
+  rfv              Float?
+  created_at       DateTime @default(now())
+}
+
+model Project {
+  id         Int      @id @default(autoincrement())
+  name       String
+  address    String?
+  abi_id     Int?
+  token_id   Int?
+  network_id Int?
+  enabled    Boolean  @default(false)
+  created_at DateTime @default(now())
+}
+
+model ABI {
+  id         Int      @id @default(autoincrement())
+  abi        Json
+  token_id   Int?
+  project_id Int?
+  created_at DateTime @default(now())
+}
+
+model Token {
+  id         Int      @id @default(autoincrement())
+  name       String
+  address    String?
+  abi_id     Int?
+  network_id Int?
+  created_at DateTime @default(now())
+}
+
+model Liquidity {
+  id         Int      @id @default(autoincrement())
+  name       String
+  address    String?
+  tokend_id  Int?
+  project_id Int?
+  created_at DateTime @default(now())
+}
+
+model Network {
+  id           Int      @id @default(autoincrement())
+  name         String
+  rpc_endpoint String
+  created_at   DateTime @default(now())
+}
+

@@ -1,0 +1,31 @@
+version: "3.9"
+services: 
+  mysql:
+    image: mysql:latest
+    restart: always
+    environment:
+      MYSQL_DATABASE: titan_chest
+      MYSQL_ROOT_PASSWORD: root
+    ports: 
+      - 3306:3306
+    expose:
+      - 3306
+    volumes: 
+      - mysql:/var/lib/mysql
+  
+  titan-chest-api:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    container_name: titan-chest-api
+    depends_on:
+      - mysql
+    volumes:
+      - .:/app
+    ports: 
+      - 3000:3000
+
+    restart: always
+
+volumes:
+  mysql:

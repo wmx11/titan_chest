@@ -1,0 +1,96 @@
+import { Router, Request, Response } from 'express';
+import { addAbi, deleteAbi, getAbiById, getAllAbi, updateAbi } from '../controllers/abi';
+
+const router = Router();
+
+router.get('/get', async (req: Request, res: Response) => {
+  try {
+    const abis = await getAllAbi();
+
+    return res.json({
+      success: true,
+      data: abis,
+    });
+  } catch (error) {
+    console.log(error);
+
+    return res.json({
+      success: false,
+      message: error,
+    });
+  }
+});
+
+router.get('/get/:abi_id', async (req: Request, res: Response) => {
+  try {
+    const abi = await getAbiById(parseInt(req.params.abi_id, 10));
+
+    return res.json({
+      success: true,
+      data: abi,
+    });
+  } catch (error) {
+    console.log(error);
+
+    return res.json({
+      success: false,
+      message: error,
+    });
+  }
+});
+
+router.post('/add', async (req: Request, res: Response) => {
+  try {
+    const entry = await addAbi(req.body);
+
+    return res.json({
+      success: true,
+      data: entry,
+    });
+  } catch (error) {
+    console.log(error);
+
+    return res.json({
+      success: false,
+      message: error,
+    });
+  }
+});
+
+router.patch('/update/:abi_id', async (req: Request, res: Response) => {
+  try {
+    const abi = await updateAbi(parseInt(req.params.abi_id, 10), req.body);
+
+    return res.json({
+      success: true,
+      data: abi,
+    });
+  } catch (error) {
+    console.log(error);
+
+    return res.json({
+      success: false,
+      message: error,
+    });
+  }
+});
+
+router.delete('/delete/:abi_id', async (req: Request, res: Response) => {
+  try {
+    const abi = await deleteAbi(parseInt(req.params.abi_id, 10));
+
+    return res.json({
+      success: true,
+      data: abi,
+    });
+  } catch (error) {
+    console.log(error);
+
+    return res.json({
+      success: false,
+      message: error,
+    });
+  }
+});
+
+export default router;

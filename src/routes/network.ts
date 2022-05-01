@@ -1,15 +1,15 @@
 import { Router, Request, Response } from 'express';
-import { addToken, deleteToken, getAllTokens, getTokenById, updateToken } from '../controllers/token';
+import { addNetwork, deleteNetwork, getAllNetworks, getNetworkById, updateNetwork } from '../controllers/network';
 
 const router = Router();
 
 router.get('/get', async (req: Request, res: Response) => {
   try {
-    const tokens = await getAllTokens();
+    const networks = await getAllNetworks();
 
     return res.json({
       success: true,
-      data: tokens,
+      data: networks,
     });
   } catch (error) {
     console.log(error);
@@ -21,13 +21,13 @@ router.get('/get', async (req: Request, res: Response) => {
   }
 });
 
-router.get('/get/:token_id', async (req: Request, res: Response) => {
+router.get('/get/:network_id', async (req: Request, res: Response) => {
   try {
-    const token = await getTokenById(parseInt(req.params.token_id, 10));
+    const network = await getNetworkById(parseInt(req.params.network_id, 10));
 
     return res.json({
       success: true,
-      data: token,
+      data: network,
     });
   } catch (error) {
     console.log(error);
@@ -41,7 +41,7 @@ router.get('/get/:token_id', async (req: Request, res: Response) => {
 
 router.post('/add', async (req: Request, res: Response) => {
   try {
-    const entry = await addToken(req.body);
+    const entry = await addNetwork(req.body);
 
     return res.json({
       success: true,
@@ -57,13 +57,13 @@ router.post('/add', async (req: Request, res: Response) => {
   }
 });
 
-router.patch('/update/:token_id', async (req: Request, res: Response) => {
+router.patch('/update/:network_id', async (req: Request, res: Response) => {
   try {
-    const token = await updateToken(parseInt(req.params.token_id, 10), req.body);
+    const network = await updateNetwork(parseInt(req.params.network_id, 10), req.body);
 
     return res.json({
       success: true,
-      data: token,
+      data: network,
     });
   } catch (error) {
     console.log(error);
@@ -75,13 +75,13 @@ router.patch('/update/:token_id', async (req: Request, res: Response) => {
   }
 });
 
-router.delete('/delete/:token_id', async (req: Request, res: Response) => {
+router.delete('/delete/:network_id', async (req: Request, res: Response) => {
   try {
-    const token = await deleteToken(parseInt(req.params.token_id, 10));
+    const network = await deleteNetwork(parseInt(req.params.network_id, 10));
 
     return res.json({
       success: true,
-      data: token,
+      data: network,
     });
   } catch (error) {
     console.log(error);

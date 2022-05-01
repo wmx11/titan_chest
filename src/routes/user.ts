@@ -1,15 +1,15 @@
 import { Router, Request, Response } from 'express';
-import { addToken, deleteToken, getAllTokens, getTokenById, updateToken } from '../controllers/token';
+import { addUser, deleteUser, getAllUsers, getUserById, updateUser } from '../controllers/user';
 
 const router = Router();
 
 router.get('/get', async (req: Request, res: Response) => {
   try {
-    const tokens = await getAllTokens();
+    const users = await getAllUsers();
 
     return res.json({
       success: true,
-      data: tokens,
+      data: users,
     });
   } catch (error) {
     console.log(error);
@@ -21,13 +21,13 @@ router.get('/get', async (req: Request, res: Response) => {
   }
 });
 
-router.get('/get/:token_id', async (req: Request, res: Response) => {
+router.get('/get/:user_id', async (req: Request, res: Response) => {
   try {
-    const token = await getTokenById(parseInt(req.params.token_id, 10));
+    const user = await getUserById();
 
     return res.json({
       success: true,
-      data: token,
+      data: user,
     });
   } catch (error) {
     console.log(error);
@@ -41,11 +41,11 @@ router.get('/get/:token_id', async (req: Request, res: Response) => {
 
 router.post('/add', async (req: Request, res: Response) => {
   try {
-    const entry = await addToken(req.body);
+    const user = await addUser();
 
     return res.json({
       success: true,
-      data: entry,
+      data: user,
     });
   } catch (error) {
     console.log(error);
@@ -57,13 +57,13 @@ router.post('/add', async (req: Request, res: Response) => {
   }
 });
 
-router.patch('/update/:token_id', async (req: Request, res: Response) => {
+router.patch('/update/:user_id', async (req: Request, res: Response) => {
   try {
-    const token = await updateToken(parseInt(req.params.token_id, 10), req.body);
+    const user = await updateUser();
 
     return res.json({
       success: true,
-      data: token,
+      data: user,
     });
   } catch (error) {
     console.log(error);
@@ -75,13 +75,13 @@ router.patch('/update/:token_id', async (req: Request, res: Response) => {
   }
 });
 
-router.delete('/delete/:token_id', async (req: Request, res: Response) => {
+router.delete('/delete/:user_id', async (req: Request, res: Response) => {
   try {
-    const token = await deleteToken(parseInt(req.params.token_id, 10));
+    const user = await deleteUser();
 
     return res.json({
       success: true,
-      data: token,
+      data: user,
     });
   } catch (error) {
     console.log(error);

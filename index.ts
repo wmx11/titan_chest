@@ -1,16 +1,29 @@
-import express, { Application, Request, Response } from 'express';
+import express, { Application } from 'express';
 
 import routes from './src/config/routes';
+
 import statsRoute from './src/routes/stats';
+import projectRoute from './src/routes/project';
+import abiRoute from './src/routes/abi';
+import liquidityRoute from './src/routes/liquidity';
+import networkRoute from './src/routes/network';
+import tokenRoute from './src/routes/token';
 
 const app: Application = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-const port: any = process.env.PORT || 3000;
+const port = process.env.PORT || 3000;
 
-app.use(routes.stats, statsRoute);
+const { stats, project, abi, liquidity, network, token } = routes;
+
+app.use(stats, statsRoute);
+app.use(project, projectRoute);
+app.use(abi, abiRoute);
+app.use(liquidity, liquidityRoute);
+app.use(network, networkRoute);
+app.use(token, tokenRoute);
 
 app.listen(port, () => {
   console.log(`Titan Chest API server started on port ${port}`);

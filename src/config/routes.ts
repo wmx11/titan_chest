@@ -8,4 +8,5 @@ export default {
   liquidity: `${API_ROUTE}/liquidity`,
   project: `${API_ROUTE}/project`,
   token: `${API_ROUTE}/token`,
+  network: `${API_ROUTE}/network`,
 };

@@ -23,7 +23,7 @@ services:
     volumes:
       - .:/app
     ports: 
-      - 3000:3000
+      - 2000:2000
 
     restart: always
 

@@ -46,6 +46,10 @@ router.post('/add', async (req: Request, res: Response) => {
     return res.json({
       success: true,
       data: entry,
+      message: {
+        value: 'Network address has been added successfully',
+        type: 'success',
+      },
     });
   } catch (error) {
     console.log(error);
@@ -64,6 +68,10 @@ router.patch('/update/:network_id', async (req: Request, res: Response) => {
     return res.json({
       success: true,
       data: network,
+      message: {
+        value: 'Network address has been updated successfully',
+        type: 'success',
+      },
     });
   } catch (error) {
     console.log(error);

@@ -52,6 +52,10 @@ router.post('/add', async (req: Request, res: Response) => {
     return res.json({
       success: true,
       data: entry,
+      message: {
+        value: 'LP address has been added successfully',
+        type: 'success',
+      },
     });
   } catch (error) {
     console.log(error);
@@ -70,6 +74,10 @@ router.patch('/update/:liquidity_id', async (req: Request, res: Response) => {
     return res.json({
       success: true,
       data: liquidityPool,
+      message: {
+        value: 'LP address has been updated successfully',
+        type: 'success',
+      },
     });
   } catch (error) {
     console.log(error);

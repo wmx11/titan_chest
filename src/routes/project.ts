@@ -46,6 +46,10 @@ router.post('/add', async (req: Request, res: Response) => {
     return res.json({
       success: true,
       data: entry,
+      message: {
+        value: 'New project has been added successfully',
+        type: 'success',
+      },
     });
   } catch (error) {
     console.log(error);
@@ -64,6 +68,10 @@ router.patch('/update/:project_id', async (req: Request, res: Response) => {
     return res.json({
       success: true,
       data: project,
+      message: {
+        value: 'Project has been updated successfully',
+        type: 'success',
+      },
     });
   } catch (error) {
     console.log(error);

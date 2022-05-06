@@ -9,4 +9,5 @@ export default {
   project: `${API_ROUTE}/project`,
   token: `${API_ROUTE}/token`,
   network: `${API_ROUTE}/network`,
+  user: `${API_ROUTE}/user`,
 };

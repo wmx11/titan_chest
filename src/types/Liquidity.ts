@@ -1,6 +1,6 @@
 export type Liquidity = {
   name: string;
   address: string;
-  tokend_id?: number;
+  token_id?: number;
   network_id?: number;
 };

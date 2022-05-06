@@ -1,4 +1,5 @@
 export type Stats = {
+  name?: string;
   project_id: number;
   price?: number;
   marketcap?: number;

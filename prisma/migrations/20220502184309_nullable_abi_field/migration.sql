@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE `ABI` MODIFY `abi` JSON NULL;

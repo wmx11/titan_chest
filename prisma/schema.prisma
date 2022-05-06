@@ -13,6 +13,7 @@ datasource db {
 
 model Stats {
   id               Int      @id @default(autoincrement())
+  name             String?
   project_id       Int?
   price            Float?
   marketcap        Float?
@@ -26,19 +27,26 @@ model Stats {
 }
 
 model Project {
-  id         Int      @id @default(autoincrement())
-  name       String
-  address    String?
-  abi_id     Int?
-  token_id   Int?
-  network_id Int?
-  enabled    Boolean  @default(false)
-  created_at DateTime @default(now())
+  id                        Int      @id @default(autoincrement())
+  name                      String
+  address                   String?
+  treasury_address          String?
+  rfv_address               String?
+  abi_id                    Int?
+  token_id                  Int?
+  token_pair_id             Int?
+  network_id                Int?
+  assets_token_id           Int?
+  holders_endpoint          String?
+  average_holdings_endpoint String?
+  enabled                   Boolean  @default(false)
+  created_at                DateTime @default(now())
 }
 
 model ABI {
   id         Int      @id @default(autoincrement())
-  abi        Json
+  name       String?
+  abi        Json?
   token_id   Int?
   project_id Int?
   created_at DateTime @default(now())
@@ -57,7 +65,7 @@ model Liquidity {
   id         Int      @id @default(autoincrement())
   name       String
   address    String?
-  tokend_id  Int?
+  token_id   Int?
   project_id Int?
   created_at DateTime @default(now())
 }

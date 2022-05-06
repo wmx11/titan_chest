@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE `ABI` ADD COLUMN `name` VARCHAR(191) NULL;

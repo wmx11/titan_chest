@@ -19,6 +19,19 @@ export const getLiquidityPoolById = async (id: number) => {
   return liquidity;
 };
 
+export const getLiquidityPoolByProjectOrTokenId = async (id: number, tokenId: number) => {
+  const liquidity = await prisma.liquidity.findFirst({
+    where: {
+      project_id: id,
+      token_id: {
+        equals: tokenId ? tokenId : 0,
+      },
+    },
+  });
+
+  return liquidity;
+};
+
 export const addLiquidityPool = async (liquidity: Liquidity) => {
   const entry = await prisma.liquidity.create({
     data: { ...liquidity },

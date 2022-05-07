@@ -1,5 +1,6 @@
 import { Router, Request, Response } from 'express';
 import { addProjectStats, getProjectStatsById } from '../controllers/stats';
+import { authToken } from '../middlewares/authThoken';
 
 const router = Router();
 
@@ -36,7 +37,7 @@ router.get('/get/:project_id', async (req: Request, res: Response) => {
 /**
  * @desc - Save project stats to the database
  */
-router.post('/add', async (req: Request, res: Response) => {
+router.post('/add', authToken, async (req: Request, res: Response) => {
   try {
     const entry = await addProjectStats(req.body);
 

@@ -1,5 +1,6 @@
 import { Router, Request, Response } from 'express';
 import { addToken, deleteToken, getAllTokens, getTokenById, updateToken } from '../controllers/token';
+import { authToken } from '../middlewares/authThoken';
 
 const router = Router();
 
@@ -39,7 +40,7 @@ router.get('/get/:token_id', async (req: Request, res: Response) => {
   }
 });
 
-router.post('/add', async (req: Request, res: Response) => {
+router.post('/add', authToken, async (req: Request, res: Response) => {
   try {
     const entry = await addToken(req.body);
 
@@ -61,7 +62,7 @@ router.post('/add', async (req: Request, res: Response) => {
   }
 });
 
-router.patch('/update/:token_id', async (req: Request, res: Response) => {
+router.patch('/update/:token_id', authToken, async (req: Request, res: Response) => {
   try {
     const token = await updateToken(parseInt(req.params.token_id, 10), req.body);
 
@@ -83,7 +84,7 @@ router.patch('/update/:token_id', async (req: Request, res: Response) => {
   }
 });
 
-router.delete('/delete/:token_id', async (req: Request, res: Response) => {
+router.delete('/delete/:token_id', authToken, async (req: Request, res: Response) => {
   try {
     const token = await deleteToken(parseInt(req.params.token_id, 10));
 

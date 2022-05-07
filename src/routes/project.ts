@@ -1,5 +1,6 @@
 import { Router, Request, Response } from 'express';
 import { addProject, deleteProject, getAllProjects, getProjectById, updateProject } from '../controllers/project';
+import { authToken } from '../middlewares/authThoken';
 
 const router = Router();
 
@@ -39,7 +40,7 @@ router.get('/get/:project_id', async (req: Request, res: Response) => {
   }
 });
 
-router.post('/add', async (req: Request, res: Response) => {
+router.post('/add', authToken, async (req: Request, res: Response) => {
   try {
     const entry = await addProject(req.body);
 
@@ -61,7 +62,7 @@ router.post('/add', async (req: Request, res: Response) => {
   }
 });
 
-router.patch('/update/:project_id', async (req: Request, res: Response) => {
+router.patch('/update/:project_id', authToken, async (req: Request, res: Response) => {
   try {
     const project = await updateProject(parseInt(req.params.project_id, 10), req.body);
 
@@ -83,7 +84,7 @@ router.patch('/update/:project_id', async (req: Request, res: Response) => {
   }
 });
 
-router.delete('/delete/:project_id', async (req: Request, res: Response) => {
+router.delete('/delete/:project_id', authToken, async (req: Request, res: Response) => {
   try {
     const project = await deleteProject(parseInt(req.params.project_id, 10));
 

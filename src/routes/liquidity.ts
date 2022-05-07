@@ -6,6 +6,7 @@ import {
   getLiquidityPoolById,
   updateLiquidityPool,
 } from '../controllers/liquidity';
+import { authToken } from '../middlewares/authThoken';
 
 const router = Router();
 
@@ -45,7 +46,7 @@ router.get('/get/:liquidity_id', async (req: Request, res: Response) => {
   }
 });
 
-router.post('/add', async (req: Request, res: Response) => {
+router.post('/add', authToken, async (req: Request, res: Response) => {
   try {
     const entry = await addLiquidityPool(req.body);
 
@@ -67,7 +68,7 @@ router.post('/add', async (req: Request, res: Response) => {
   }
 });
 
-router.patch('/update/:liquidity_id', async (req: Request, res: Response) => {
+router.patch('/update/:liquidity_id', authToken, async (req: Request, res: Response) => {
   try {
     const liquidityPool = await updateLiquidityPool(parseInt(req.params.liquidity_id, 10), req.body);
 
@@ -89,7 +90,7 @@ router.patch('/update/:liquidity_id', async (req: Request, res: Response) => {
   }
 });
 
-router.delete('/delete/:liquidity_id', async (req: Request, res: Response) => {
+router.delete('/delete/:liquidity_id', authToken, async (req: Request, res: Response) => {
   try {
     const liquidityPool = await deleteLiquidityPool(parseInt(req.params.liquidity_id, 10));
 

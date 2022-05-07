@@ -1,5 +1,6 @@
 import { Router, Request, Response } from 'express';
 import { addAbi, deleteAbi, getAbiById, getAllAbi, updateAbi } from '../controllers/abi';
+import { authToken } from '../middlewares/authThoken';
 
 const router = Router();
 
@@ -39,7 +40,7 @@ router.get('/get/:abi_id', async (req: Request, res: Response) => {
   }
 });
 
-router.post('/add', async (req: Request, res: Response) => {
+router.post('/add', authToken, async (req: Request, res: Response) => {
   try {
     const entry = await addAbi(req.body);
 
@@ -61,7 +62,7 @@ router.post('/add', async (req: Request, res: Response) => {
   }
 });
 
-router.patch('/update/:abi_id', async (req: Request, res: Response) => {
+router.patch('/update/:abi_id', authToken, async (req: Request, res: Response) => {
   try {
     const abi = await updateAbi(parseInt(req.params.abi_id, 10), req.body);
 
@@ -83,7 +84,7 @@ router.patch('/update/:abi_id', async (req: Request, res: Response) => {
   }
 });
 
-router.delete('/delete/:abi_id', async (req: Request, res: Response) => {
+router.delete('/delete/:abi_id', authToken, async (req: Request, res: Response) => {
   try {
     const abi = await deleteAbi(parseInt(req.params.abi_id, 10));
 

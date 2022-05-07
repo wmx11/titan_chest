@@ -10,4 +10,5 @@ export default {
   token: `${API_ROUTE}/token`,
   network: `${API_ROUTE}/network`,
   user: `${API_ROUTE}/user`,
+  bots: `${API_ROUTE}/bots`,
 };

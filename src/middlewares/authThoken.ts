@@ -12,11 +12,18 @@ export const authToken = async (req: Request, res: Response, next: NextFunction)
   const secret = process.env.ACCESS_TOKEN_SECRET || 'secret';
 
   try {
-    const user = await jwt.verify(token, secret);
+    const user = await jwt.verify(token, secret);    
     Object.assign(req, user);
     next();
   } catch (error) {
     console.log(error);
-    return res.sendStatus(403);
+    
+    return res.status(403).json({
+      success: false,
+      message: {
+        value: 'You are not authorized',
+        type: 'error',
+      },
+    });
   }
 };

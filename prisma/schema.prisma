@@ -82,5 +82,17 @@ model User {
   name       String
   password   String
   api_key    String?
+  enabled    Boolean  @default(false)
+  created_at DateTime @default(now())
+}
+
+model Bots {
+  id         Int      @id @default(autoincrement())
+  name       String
+  presence   String
+  tracking   String?
+  token      String?
+  project_id Int?
+  enabled    Boolean  @default(false)
   created_at DateTime @default(now())
 }

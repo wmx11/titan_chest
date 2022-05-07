@@ -30,7 +30,11 @@ export const login = async (user: User) => {
 
     return {
       status: 200,
-      accessToken,
+      user: {
+        id: existingUser.id,
+        name: existingUser.name,
+        token: accessToken,
+      },
     };
   }
 

@@ -5,8 +5,6 @@ import { getNetworkById } from '../../src/controllers/network';
 import { getAllProjects } from '../../src/controllers/project';
 import { getTokenById } from '../../src/controllers/token';
 
-import Cabin from 'cabin';
-
 import Contract from 'web3-eth-contract';
 import Web3 from 'web3';
 import { toDecimals } from '../../src/utils/helpers';
@@ -15,7 +13,6 @@ import { addProjectStats } from '../../src/controllers/stats';
 const CALLER = '0xeef21237ddb484e6813109ef848f2af17a51f8cb';
 
 const addProjectStatsService = async () => {
-  const cabin = new Cabin();
   try {
     const projects = await getAllProjects();
 
@@ -30,7 +27,7 @@ const addProjectStatsService = async () => {
       const { abi: projectABI } = await getAbiById(project.abi_id);
 
       // Get Project LP address
-      const { address: projectLP } = await getLiquidityPoolByProjectOrTokenId(project.id);
+      const { address: projectLP } = await getLiquidityPoolByProjectOrTokenId({ type: 'project_id', id: project.id });
 
       // Example -> TITANO/BNB
       // Get Project pair token
@@ -47,7 +44,10 @@ const addProjectStatsService = async () => {
       const { abi: pairTokenPairAbi } = await getAbiById(projectPairTokenPair.abi_id);
 
       // Get Project pair token's pair LP
-      const { address: tokenPairLP } = await getLiquidityPoolByProjectOrTokenId(project.id, project.token_id);
+      const { address: tokenPairLP } = await getLiquidityPoolByProjectOrTokenId({
+        type: 'token_id',
+        id: project.token_id,
+      });
 
       // Set the provider
       Contract.setProvider(rpc_endpoint);
@@ -84,10 +84,13 @@ const addProjectStatsService = async () => {
         rfvBalance = await web3.eth.getBalance(project.rfv_address);
       }
 
-      const tokenPairPrice = toDecimals(projectPairLPTokens) / toDecimals(projectLPTokens);
+      const projectDecimals = await projectContract.methods.decimals().call({ from: CALLER });
+      const projectPairDecimals = await projectPairContract.methods.decimals().call({ from: CALLER });      
+
+      const tokenPairPrice = toDecimals(projectPairLPTokens, projectPairDecimals) / toDecimals(projectLPTokens, projectDecimals);
       const pairPrice = toDecimals(pairPairLPTokens) / toDecimals(pairLPTokens);
       const tokenPrice = tokenPairPrice * pairPrice;
-      const projectLiquidity = pairPrice * toDecimals(projectPairLPTokens);
+      const projectLiquidity = pairPrice * toDecimals(projectPairLPTokens, projectPairDecimals);
       const projectMarketCap = tokenPrice * toDecimals(projectTotalSupply);
 
       const data = {
@@ -104,7 +107,7 @@ const addProjectStatsService = async () => {
       await addProjectStats(data);
     });
   } catch (error) {
-    cabin.error(error);
+    console.log(error);
   }
 };
 

@@ -1,5 +1,4 @@
-import { PrismaClient } from '@prisma/client';
-import { Stats } from '../types/Stats';
+import { PrismaClient, Stats } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
@@ -11,12 +10,17 @@ export const addProjectStats = async (stats: Stats) => {
   return entry;
 };
 
-export const getProjectStatsById = async (project_id: number) => {
+type Payload = {
+  type: string;
+  value: string | number | null;
+};
+
+export const getProjectStatsById = async (payload: Payload) => {
   const stats = await prisma.stats.findMany({
     take: 1,
     orderBy: [{ created_at: 'desc' }],
     where: {
-      project_id,
+      [payload.type]: payload.value,
     },
   });
 

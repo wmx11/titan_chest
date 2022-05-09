@@ -3,9 +3,6 @@ services:
   mysql:
     image: mysql:latest
     restart: always
-    environment:
-      MYSQL_DATABASE: titan_chest
-      MYSQL_ROOT_PASSWORD: root
     ports: 
       - 3306:3306
     expose:
@@ -24,7 +21,6 @@ services:
       - .:/app
     ports: 
       - 2000:2000
-
     restart: always
 
 volumes:

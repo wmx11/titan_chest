@@ -18,7 +18,14 @@ router.get('/check', (req: Request, res: Response) =>
  */
 router.get('/get/:project_id', async (req: Request, res: Response) => {
   try {
-    const stats = await getProjectStatsById(parseInt(req.params.project_id, 10));
+    const projectId = parseInt(req.params.project_id, 10);
+
+    const payload = {
+      type: projectId ? 'project_id' : 'name',
+      value: projectId || req.params.project_id,
+    };
+    
+    const stats = await getProjectStatsById(payload);
 
     return res.json({
       success: true,

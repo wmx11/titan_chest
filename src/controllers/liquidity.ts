@@ -19,13 +19,15 @@ export const getLiquidityPoolById = async (id: number) => {
   return liquidity;
 };
 
-export const getLiquidityPoolByProjectOrTokenId = async (id: number, tokenId: number) => {
+type Payload = {
+  type: string;
+  id: number;
+};
+
+export const getLiquidityPoolByProjectOrTokenId = async (payload: Payload) => {
   const liquidity = await prisma.liquidity.findFirst({
     where: {
-      project_id: id,
-      token_id: {
-        equals: tokenId ? tokenId : 0,
-      },
+      [payload.type]: payload.id,
     },
   });
 

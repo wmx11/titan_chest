@@ -11,15 +11,18 @@ import networkRoute from './src/routes/network';
 import tokenRoute from './src/routes/token';
 import userRoute from './src/routes/user';
 import botsRoute from './src/routes/bots';
+import startDiscordBots from './src/discord';
+import corsOrigin from './src/config/corsOrigin';
 
 const app: Application = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+
 app.use(
   cors({
-    origin: 'http://localhost:3000',
+    origin: corsOrigin,
     credentials: true,
   }),
 );
@@ -40,3 +43,5 @@ app.use(bots, botsRoute);
 app.listen(port, () => {
   console.log(`Titan Chest API server started on port ${port}`);
 });
+
+startDiscordBots();

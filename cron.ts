@@ -1,6 +1,6 @@
 import cron from 'node-cron';
 import addProjectStatsService from './src/services/addProjectStats';
 
-cron.schedule('*/1 * * * *', async () => {
+cron.schedule('*/5 * * * *', async () => {
   await addProjectStatsService();
 });

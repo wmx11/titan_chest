@@ -5,8 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon",
-    "dev": "TS_NODE=true NODE_OPTIONS=\"-r ts-node/register\" node bree.js"
+    "start": "nodemon"
   },
   "author": "",
   "license": "ISC",
@@ -15,8 +14,10 @@
     "@discordjs/builders": "^0.13.0",
     "@discordjs/rest": "^0.4.1",
     "@prisma/client": "^3.12.0",
+    "@types/es6-promise": "^3.3.0",
     "@types/express": "^4.17.13",
     "@types/node": "^17.0.24",
+    "axios": "^0.27.2",
     "bcrypt": "^5.0.1",
     "bree": "^8.0.3",
     "cabin": "^9.1.2",
@@ -31,6 +32,7 @@
     "node-cron": "^3.0.0",
     "nodemon": "^2.0.15",
     "prisma": "^3.12.0",
+    "redis": "^4.1.0",
     "signale": "^1.4.0",
     "ts-node": "^10.7.0",
     "typescript": "^4.6.3",

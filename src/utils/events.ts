@@ -4,4 +4,7 @@ export default {
     update: 'bots.update',
     delete: 'bots.delete',
   },
+  stats: {
+    add: 'stats.add',
+  },
 };

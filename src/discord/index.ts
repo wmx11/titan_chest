@@ -2,12 +2,31 @@ import { Bots } from '@prisma/client';
 import { Client, Intents } from 'discord.js';
 import { getAllEnabledBots } from '../controllers/bots';
 import { getProjectStatsById } from '../controllers/stats';
-import eventBus from '../utils/eventBus';
-import events from '../utils/events';
+import { channels, redisSubscribe } from '../utils/redisClient';
+import toCurrency from '../utils/toCurrency';
 import setNickname from './utils/setNickname';
 
 const handleBotInit = (bot: Bots, enabled: boolean) => {
   const isActive = enabled;
+
+  const setBotData = async () => {
+    const stats = await getProjectStatsById({ type: 'project_id', value: bot.project_id });
+
+    if (!stats.length) {
+      return;
+    }
+
+    const statsData = stats[0][bot.tracking];
+    let trackingData = '';
+
+    if (bot.tracking !== 'holders' || bot.tracking !== 'average_holdings') {
+      trackingData = toCurrency(statsData, statsData.toFixed(3).length - 1);
+    } else {
+      trackingData = statsData.toLocaleString();
+    }
+
+    setNickname(client, bot.bot_id, trackingData);
+  };
 
   const client = new Client({
     intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES],
@@ -21,19 +40,15 @@ const handleBotInit = (bot: Bots, enabled: boolean) => {
       status: 'online',
     });
 
-    eventBus.on(events.bots.update, (entry) => {
-      console.log(entry);
+    setBotData();
+
+    redisSubscribe(channels.stats, (message) => {
+      const parsedStats = JSON.parse(message);
+      if (parsedStats.project_id === bot.project_id) {
+        console.log(parsedStats);
+        setBotData();
+      }
     });
-
-    const stats = await getProjectStatsById({ type: 'project_id', value: bot.project_id });
-
-    if (!stats.length) {
-      return;
-    }
-
-    const trackingData = stats[0][bot.tracking].toLocaleString();
-
-    setNickname(client, bot.bot_id, trackingData);
   });
 
   try {
@@ -51,8 +66,9 @@ const handleBotInit = (bot: Bots, enabled: boolean) => {
 const startDiscordBots = async () => {
   const trackerBots = await getAllEnabledBots();
 
-  eventBus.on(events.bots.update, (entry) => {
-    handleBotInit(entry, entry.enabled);
+  await redisSubscribe(channels.bots, (message) => {
+    const parsedBot = JSON.parse(message);
+    handleBotInit(parsedBot, parsedBot.enabled);
   });
 
   if (!trackerBots.length) {
@@ -60,7 +76,9 @@ const startDiscordBots = async () => {
     return;
   }
 
-  trackerBots.forEach((bot) => handleBotInit(bot, true));
+  return trackerBots.forEach((bot) => handleBotInit(bot, true));
 };
 
-export default startDiscordBots;
+(() => {
+  startDiscordBots();
+})();

@@ -7,4 +7,8 @@ module.exports = [
     script: 'cron.js',
     name: 'add-stats-job',
   },
+  {
+    script: 'src/discord/index.js',
+    name: 'discord',
+  },
 ];

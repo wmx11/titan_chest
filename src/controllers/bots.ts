@@ -1,6 +1,5 @@
 import { PrismaClient, Bots } from '@prisma/client';
-import eventBus from '../utils/eventBus';
-import events from '../utils/events';
+import { channels, redisPublish } from '../utils/redisClient';
 
 const prisma = new PrismaClient();
 
@@ -10,7 +9,7 @@ export const getAllBots = async () => {
   return bots;
 };
 
-export const getAllEnabledBots = async () => {
+export const getAllEnabledBots = async (): Promise<Bots[]> => {
   const bots = await prisma.bots.findMany({
     where: {
       enabled: true,
@@ -39,6 +38,8 @@ export const addBot = async (bot: Bots) => {
     data: { ...sanitizedBot },
   });
 
+  await redisPublish(channels.bots, { ...entry, type: 'create' });
+
   return entry;
 };
 
@@ -56,7 +57,7 @@ export const updateBot = async (id: number, bot: Bots) => {
     },
   });
 
-  eventBus.emit(events.bots.update, entry);
+  await redisPublish(channels.bots, { ...entry, type: 'update' });
 
   return entry;
 };
@@ -67,6 +68,8 @@ export const deleteBot = async (id: number) => {
       id,
     },
   });
+
+  await redisPublish(channels.bots, { ...entry, type: 'delete' });
 
   return entry;
 };

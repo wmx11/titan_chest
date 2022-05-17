@@ -9,6 +9,7 @@ import Contract from 'web3-eth-contract';
 import Web3 from 'web3';
 import { toDecimals } from '../../src/utils/helpers';
 import { addProjectStats } from '../../src/controllers/stats';
+import axios from 'axios';
 
 const CALLER = '0xeef21237ddb484e6813109ef848f2af17a51f8cb';
 
@@ -75,6 +76,8 @@ const addProjectStatsService = async () => {
 
       let treasuryBalance = null;
       let rfvBalance = null;
+      let holders = null;
+      let average_holdings = null;
 
       if (project.treasury_address) {
         treasuryBalance = await web3.eth.getBalance(project.treasury_address);
@@ -84,10 +87,33 @@ const addProjectStatsService = async () => {
         rfvBalance = await web3.eth.getBalance(project.rfv_address);
       }
 
-      const projectDecimals = await projectContract.methods.decimals().call({ from: CALLER });
-      const projectPairDecimals = await projectPairContract.methods.decimals().call({ from: CALLER });      
+      if (project.holders_endpoint !== null) {
+        try {
+          const {
+            data: { holders: value },
+          } = await axios(project.holders_endpoint);
+          holders = value;
+        } catch (error) {
+          console.log(error);
+        }
+      }
 
-      const tokenPairPrice = toDecimals(projectPairLPTokens, projectPairDecimals) / toDecimals(projectLPTokens, projectDecimals);
+      if (project.average_holdings_endpoint !== null) {
+        try {
+          const {
+            data: { average: value },
+          } = await axios(project.average_holdings_endpoint);
+          average_holdings = value;
+        } catch (error) {
+          console.log(error);
+        }
+      }
+
+      const projectDecimals = await projectContract.methods.decimals().call({ from: CALLER });
+      const projectPairDecimals = await projectPairContract.methods.decimals().call({ from: CALLER });
+
+      const tokenPairPrice =
+        toDecimals(projectPairLPTokens, projectPairDecimals) / toDecimals(projectLPTokens, projectDecimals);
       const pairPrice = toDecimals(pairPairLPTokens) / toDecimals(pairLPTokens);
       const tokenPrice = tokenPairPrice * pairPrice;
       const projectLiquidity = pairPrice * toDecimals(projectPairLPTokens, projectPairDecimals);
@@ -102,6 +128,8 @@ const addProjectStatsService = async () => {
         marketcap: projectMarketCap,
         treasury: toDecimals(treasuryBalance) * pairPrice,
         rfv: toDecimals(rfvBalance) * pairPrice,
+        holders,
+        average_holdings,
       };
 
       await addProjectStats(data);

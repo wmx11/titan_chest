@@ -17,12 +17,12 @@ const handleBotInit = (bot: Bots, enabled: boolean) => {
     }
 
     const statsData = stats[0][bot.tracking];
-    let trackingData = '';
+    let trackingData: string | undefined = '';
 
-    if (bot.tracking !== 'holders' || bot.tracking !== 'average_holdings') {
-      trackingData = toCurrency(statsData, statsData.toFixed(3).length - 1);
-    } else {
+    if (bot.tracking === 'holders' || bot.tracking === 'average_holdings') {
       trackingData = statsData.toLocaleString();
+    } else {
+      trackingData = toCurrency(statsData, statsData.toFixed(3).length - 1);
     }
 
     setNickname(client, bot.bot_id, trackingData);

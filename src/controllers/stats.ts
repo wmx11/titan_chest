@@ -1,4 +1,5 @@
 import { PrismaClient, Stats } from '@prisma/client';
+import { channels, redisPublish } from '../utils/redisClient';
 
 const prisma = new PrismaClient();
 
@@ -6,6 +7,8 @@ export const addProjectStats = async (stats: Stats) => {
   const entry = await prisma.stats.create({
     data: { ...stats },
   });
+
+  await redisPublish(channels.stats, entry);
 
   return entry;
 };

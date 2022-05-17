@@ -1,0 +1,47 @@
+version: '3.9'
+services:
+  mysql:
+    image: mysql:latest
+    restart: always
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: titan_chest
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+    ports:
+      - 3306:3306
+    expose:
+      - 3306
+    volumes:
+      - mysql:/var/lib/mysql
+
+  redis:
+    image: redis:alpine
+    container_name: redis
+    ports:
+      - 6379:6379
+    expose:
+      - 6379
+    command: redis-server --include /usr/local/etc/redis/redis.conf
+    volumes:
+      - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
+
+  titan-chest-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: titan-chest-api
+    volumes:
+      - .:/app
+    ports:
+      - 2000:2000
+    restart: always
+
+volumes:
+  mysql:
+
+networks:
+  default:
+    external:
+      name: titan-chest-network

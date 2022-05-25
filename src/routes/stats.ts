@@ -23,8 +23,12 @@ router.get('/get/:project_id', async (req: Request, res: Response) => {
     const payload = {
       type: projectId ? 'project_id' : 'name',
       value: projectId || req.params.project_id,
+      last_day: req.query.last_day || null,
+      limit: req.query.limit || null,
+      select: req.query.select || null,
+      order: req.query.order || null,
     };
-    
+
     const stats = await getProjectStatsById(payload);
 
     return res.json({

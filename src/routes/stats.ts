@@ -27,6 +27,7 @@ router.get('/get/:project_id', async (req: Request, res: Response) => {
       limit: req.query.limit || null,
       select: req.query.select || null,
       order: req.query.order || null,
+      compute: req.query.compute || null,
     };
 
     const stats = await getProjectStatsById(payload);

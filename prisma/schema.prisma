@@ -23,6 +23,7 @@ model Stats {
   average_holdings Float?
   treasury         Float?
   rfv              Float?
+  burned_tokens    Float?
   created_at       DateTime @default(now())
 }
 
@@ -32,6 +33,7 @@ model Project {
   address                   String?
   treasury_address          String?
   rfv_address               String?
+  burn_address              String?
   abi_id                    Int?
   token_id                  Int?
   token_pair_id             Int?

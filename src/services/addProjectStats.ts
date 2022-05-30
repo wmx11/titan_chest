@@ -78,6 +78,7 @@ const addProjectStatsService = async () => {
       let rfvBalance = null;
       let holders = null;
       let average_holdings = null;
+      let burned_tokens = null;
 
       if (project.treasury_address) {
         treasuryBalance = await web3.eth.getBalance(project.treasury_address);
@@ -109,6 +110,11 @@ const addProjectStatsService = async () => {
         }
       }
 
+      if (project.burn_address) {
+        const burnedTokens = await projectContract.methods.balanceOf(project.burn_address).call({ from: CALLER });
+        burned_tokens = burnedTokens;
+      }
+
       const projectDecimals = await projectContract.methods.decimals().call({ from: CALLER });
       const projectPairDecimals = await projectPairContract.methods.decimals().call({ from: CALLER });
 
@@ -130,6 +136,7 @@ const addProjectStatsService = async () => {
         rfv: toDecimals(rfvBalance) * pairPrice,
         holders,
         average_holdings,
+        burned_tokens: toDecimals(burned_tokens, projectDecimals),
       };
 
       await addProjectStats(data);

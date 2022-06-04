@@ -62,8 +62,8 @@ export const getProjectStatsById = async (payload: Payload) => {
       name: 'circulating_supply',
       compute: !!payload.compute || false,
       generate: (data): number | null => {
-        if (data.total_supply && data.burned_tokens) {
-          return data.total_supply - data.burned_tokens;
+        if (data.marketcap && data.price && data.burned_tokens) {
+          return data.marketcap / data.price - data.burned_tokens;
         }
 
         return null;

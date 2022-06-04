@@ -4,6 +4,7 @@ const corsOrigin = [
   'http://titan-chest-api:2000',
   'http://localhost',
   'https://titanchest.com',
+  'https://www.titanchest.com',
 ];
 
 export default corsOrigin;

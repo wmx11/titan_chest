@@ -38,7 +38,12 @@ export const getProjectStatsById = async (payload: Payload) => {
   type ComputedField = {
     name: string;
     compute: boolean;
-    generate: (data: { marketcap: number | null; price: number | null }) => number | null;
+    generate: (data: {
+      marketcap: number | null;
+      price: number | null;
+      total_supply: number | null;
+      burned_tokens: number | null;
+    }) => number | null;
   };
 
   const computedFields: ComputedField[] = [
@@ -48,6 +53,17 @@ export const getProjectStatsById = async (payload: Payload) => {
       generate: (data): number | null => {
         if (data.marketcap && data.price) {
           return data.marketcap / data.price;
+        }
+
+        return null;
+      },
+    },
+    {
+      name: 'circulating_supply',
+      compute: !!payload.compute || false,
+      generate: (data): number | null => {
+        if (data.total_supply && data.burned_tokens) {
+          return data.total_supply - data.burned_tokens;
         }
 
         return null;

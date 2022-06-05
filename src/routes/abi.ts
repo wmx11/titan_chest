@@ -1,12 +1,13 @@
+import { ABI } from '@prisma/client';
 import { Router, Request, Response } from 'express';
 import { addAbi, deleteAbi, getAbiById, getAllAbi, updateAbi } from '../controllers/abi';
 import { authToken } from '../middlewares/authThoken';
 
 const router = Router();
 
-router.get('/get', async (req: Request, res: Response) => {
+router.get('/get', async (req: Request, res: Response): Promise<Response<string>> => {
   try {
-    const abis = await getAllAbi();
+    const abis: ABI[] = await getAllAbi();
 
     return res.json({
       success: true,
@@ -22,9 +23,9 @@ router.get('/get', async (req: Request, res: Response) => {
   }
 });
 
-router.get('/get/:abi_id', async (req: Request, res: Response) => {
+router.get('/get/:abi_id', async (req: Request, res: Response): Promise<Response<string>> => {
   try {
-    const abi = await getAbiById(parseInt(req.params.abi_id, 10));
+    const abi: ABI | null = await getAbiById(parseInt(req.params.abi_id, 10));
 
     return res.json({
       success: true,
@@ -40,9 +41,9 @@ router.get('/get/:abi_id', async (req: Request, res: Response) => {
   }
 });
 
-router.post('/add', authToken, async (req: Request, res: Response) => {
+router.post('/add', authToken, async (req: Request, res: Response): Promise<Response<string>> => {
   try {
-    const entry = await addAbi(req.body);
+    const entry: ABI | null = await addAbi(req.body);
 
     return res.json({
       success: true,
@@ -62,9 +63,9 @@ router.post('/add', authToken, async (req: Request, res: Response) => {
   }
 });
 
-router.patch('/update/:abi_id', authToken, async (req: Request, res: Response) => {
+router.patch('/update/:abi_id', authToken, async (req: Request, res: Response): Promise<Response<string>> => {
   try {
-    const abi = await updateAbi(parseInt(req.params.abi_id, 10), req.body);
+    const abi: ABI | null = await updateAbi(parseInt(req.params.abi_id, 10), req.body);
 
     return res.json({
       success: true,
@@ -84,9 +85,9 @@ router.patch('/update/:abi_id', authToken, async (req: Request, res: Response) =
   }
 });
 
-router.delete('/delete/:abi_id', authToken, async (req: Request, res: Response) => {
+router.delete('/delete/:abi_id', authToken, async (req: Request, res: Response): Promise<Response<string>> => {
   try {
-    const abi = await deleteAbi(parseInt(req.params.abi_id, 10));
+    const abi: ABI | null = await deleteAbi(parseInt(req.params.abi_id, 10));
 
     return res.json({
       success: true,

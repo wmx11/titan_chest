@@ -3,14 +3,14 @@ import { channels, redisPublish } from '../utils/redisClient';
 
 const prisma = new PrismaClient();
 
-export const getAllBots = async () => {
-  const bots = await prisma.bots.findMany();
+export const getAllBots = async (): Promise<Bots[]> => {
+  const bots: Bots[] = await prisma.bots.findMany();
 
   return bots;
 };
 
 export const getAllEnabledBots = async (): Promise<Bots[]> => {
-  const bots = await prisma.bots.findMany({
+  const bots: Bots[] = await prisma.bots.findMany({
     where: {
       enabled: true,
     },
@@ -19,8 +19,8 @@ export const getAllEnabledBots = async (): Promise<Bots[]> => {
   return bots;
 };
 
-export const getBotById = async (id: number) => {
-  const bot = await prisma.bots.findFirst({
+export const getBotById = async (id: number): Promise<Bots | null> => {
+  const bot: Bots | null = await prisma.bots.findFirst({
     where: {
       id,
     },
@@ -29,12 +29,18 @@ export const getBotById = async (id: number) => {
   return bot;
 };
 
-export const addBot = async (bot: Bots) => {
-  const sanitizedBot = JSON.parse(JSON.stringify(bot));
+export const addBot = async (bot: Bots): Promise<Bots | null> => {
+  const sanitizedBot: Bots | undefined = JSON.parse(JSON.stringify(bot));
 
-  sanitizedBot.bot_id = sanitizedBot?.bot_id?.toString();
+  if (!sanitizedBot) {
+    return null;
+  }
 
-  const entry = await prisma.bots.create({
+  if (sanitizedBot.hasOwnProperty('bot_id')) {
+    sanitizedBot.bot_id = sanitizedBot.bot_id?.toString() || '';
+  }
+
+  const entry: Bots | null = await prisma.bots.create({
     data: { ...sanitizedBot },
   });
 
@@ -43,12 +49,18 @@ export const addBot = async (bot: Bots) => {
   return entry;
 };
 
-export const updateBot = async (id: number, bot: Bots) => {
-  const sanitizedBot = JSON.parse(JSON.stringify(bot));
+export const updateBot = async (id: number, bot: Bots): Promise<Bots | null> => {
+  const sanitizedBot: Bots | undefined = JSON.parse(JSON.stringify(bot));
 
-  sanitizedBot.bot_id = sanitizedBot?.bot_id?.toString();
+  if (!sanitizedBot) {
+    return null;
+  }
 
-  const entry = await prisma.bots.update({
+  if (sanitizedBot.hasOwnProperty('bot_id')) {
+    sanitizedBot.bot_id = sanitizedBot.bot_id?.toString() || '';
+  }
+
+  const entry: Bots | null = await prisma.bots.update({
     where: {
       id,
     },
@@ -62,8 +74,8 @@ export const updateBot = async (id: number, bot: Bots) => {
   return entry;
 };
 
-export const deleteBot = async (id: number) => {
-  const entry = await prisma.bots.delete({
+export const deleteBot = async (id: number): Promise<Bots | null> => {
+  const entry: Bots | null = await prisma.bots.delete({
     where: {
       id,
     },

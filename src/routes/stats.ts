@@ -1,16 +1,20 @@
+import { Stats } from '@prisma/client';
 import { Router, Request, Response } from 'express';
 import { addProjectStats, getProjectStatsById } from '../controllers/stats';
 import { authToken } from '../middlewares/authThoken';
+import { Payload } from '../types/Stats';
 
 const router = Router();
 
 /**
  * @desc - Check if the service is alive
  */
-router.get('/check', (req: Request, res: Response) =>
-  res.json({
-    alive: true,
-  }),
+router.get(
+  '/check',
+  (req: Request, res: Response): Response<string> =>
+    res.json({
+      alive: true,
+    }),
 );
 
 /**
@@ -20,14 +24,10 @@ router.get('/get/:project_id', async (req: Request, res: Response) => {
   try {
     const projectId = parseInt(req.params.project_id, 10);
 
-    const payload = {
+    const payload: Payload = {
       type: projectId ? 'project_id' : 'name',
       value: projectId || req.params.project_id,
-      last_day: req.query.last_day || null,
-      limit: req.query.limit || null,
-      select: req.query.select || null,
-      order: req.query.order || null,
-      compute: req.query.compute || null,
+      ...(req.query as Omit<Payload, 'type' | 'value'>),
     };
 
     const stats = await getProjectStatsById(payload);
@@ -49,10 +49,9 @@ router.get('/get/:project_id', async (req: Request, res: Response) => {
 /**
  * @desc - Save project stats to the database
  */
-router.post('/add', authToken, async (req: Request, res: Response) => {
+router.post('/add', authToken, async (req: Request, res: Response): Promise<Response<string>> => {
   try {
-    const entry = await addProjectStats(req.body);
-
+    const entry: Stats | null = await addProjectStats(req.body);
     return res.json({
       success: true,
       data: entry,

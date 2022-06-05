@@ -1,4 +1,4 @@
-const toCurrency = (number: number, maxDigits = 3) => {
+const toCurrency = (number: number | null, maxDigits = 3): string | undefined => {
   if (!number) {
     return;
   }

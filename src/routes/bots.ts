@@ -1,12 +1,13 @@
+import { Bots } from '@prisma/client';
 import { Router, Request, Response } from 'express';
 import { addBot, deleteBot, getAllBots, getBotById, updateBot } from '../controllers/bots';
 import { authToken } from '../middlewares/authThoken';
 
 const router = Router();
 
-router.get('/get', async (req: Request, res: Response) => {
+router.get('/get', async (req: Request, res: Response): Promise<Response<string>> => {
   try {
-    const bots = await getAllBots();
+    const bots: Bots[] = await getAllBots();
 
     return res.json({
       success: true,
@@ -22,9 +23,9 @@ router.get('/get', async (req: Request, res: Response) => {
   }
 });
 
-router.get('/get/:bot_id', async (req: Request, res: Response) => {
+router.get('/get/:bot_id', async (req: Request, res: Response): Promise<Response<string>> => {
   try {
-    const bot = await getBotById(parseInt(req.params.bot_id, 10));
+    const bot: Bots | null = await getBotById(parseInt(req.params.bot_id, 10));
 
     return res.json({
       success: true,
@@ -40,9 +41,9 @@ router.get('/get/:bot_id', async (req: Request, res: Response) => {
   }
 });
 
-router.post('/add', authToken, async (req: Request, res: Response) => {
+router.post('/add', authToken, async (req: Request, res: Response): Promise<Response<string>> => {
   try {
-    const entry = await addBot(req.body);
+    const entry: Bots | null = await addBot(req.body);
 
     return res.json({
       success: true,
@@ -62,9 +63,9 @@ router.post('/add', authToken, async (req: Request, res: Response) => {
   }
 });
 
-router.patch('/update/:bot_id', authToken, async (req: Request, res: Response) => {
+router.patch('/update/:bot_id', authToken, async (req: Request, res: Response): Promise<Response<string>> => {
   try {
-    const bot = await updateBot(parseInt(req.params.bot_id, 10), req.body);
+    const bot: Bots | null = await updateBot(parseInt(req.params.bot_id, 10), req.body);
 
     return res.json({
       success: true,
@@ -84,9 +85,9 @@ router.patch('/update/:bot_id', authToken, async (req: Request, res: Response) =
   }
 });
 
-router.delete('/delete/:bot_id', authToken, async (req: Request, res: Response) => {
+router.delete('/delete/:bot_id', authToken, async (req: Request, res: Response): Promise<Response<string>> => {
   try {
-    const bot = await deleteBot(parseInt(req.params.bot_id, 10));
+    const bot: Bots | null = await deleteBot(parseInt(req.params.bot_id, 10));
 
     return res.json({
       success: true,

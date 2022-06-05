@@ -1,12 +1,14 @@
 import { Router, Request, Response } from 'express';
 import { addUser, deleteUser, getAllUsers, getUserById, login, register, updateUser } from '../controllers/user';
 import { authToken } from '../middlewares/authThoken';
+import { UserNamePassword, UserLoginState } from '../types/User';
+import { Response as ResponseType } from '../types/Response';
 
 const router = Router();
 
-router.get('/get', authToken, async (req: Request, res: Response) => {
+router.get('/get', authToken, async (req: Request, res: Response): Promise<Response<string>> => {
   try {
-    const users = await getAllUsers();
+    const users: object = await getAllUsers();
 
     return res.json({
       success: true,
@@ -22,17 +24,16 @@ router.get('/get', authToken, async (req: Request, res: Response) => {
   }
 });
 
-router.post('/login', async (req: Request, res: Response) => {
+router.post('/login', async (req: Request, res: Response): Promise<Response<string>> => {
   try {
-    const { name, password } = req.body;
+    const { name, password }: UserNamePassword = req.body;
 
-    const user = await login({ name, password });
+    const user: UserLoginState | ResponseType = await login({ name, password });
 
     return res.status(user.status).json({
       success: true,
       data: user,
     });
-
   } catch (error) {
     console.log(error);
 
@@ -43,17 +44,16 @@ router.post('/login', async (req: Request, res: Response) => {
   }
 });
 
-router.post('/register', async (req: Request, res: Response) => {
+router.post('/register', async (req: Request, res: Response): Promise<Response<string>> => {
   try {
-    const { name, password } = req.body;
+    const { name, password }: UserNamePassword = req.body;
 
-    const user = await register({ name, password });
+    const user: ResponseType = await register({ name, password });
 
     return res.status(user.status).json({
       success: true,
       data: user,
     });
-
   } catch (error) {
     console.log(error);
 
@@ -64,7 +64,7 @@ router.post('/register', async (req: Request, res: Response) => {
   }
 });
 
-router.get('/get/:user_id', async (req: Request, res: Response) => {
+router.get('/get/:user_id', async (req: Request, res: Response): Promise<Response<string>> => {
   try {
     const user = await getUserById();
 
@@ -82,7 +82,7 @@ router.get('/get/:user_id', async (req: Request, res: Response) => {
   }
 });
 
-router.post('/add', async (req: Request, res: Response) => {
+router.post('/add', async (req: Request, res: Response): Promise<Response<string>> => {
   try {
     const user = await addUser();
 
@@ -100,7 +100,7 @@ router.post('/add', async (req: Request, res: Response) => {
   }
 });
 
-router.patch('/update/:user_id', async (req: Request, res: Response) => {
+router.patch('/update/:user_id', async (req: Request, res: Response): Promise<Response<string>> => {
   try {
     const user = await updateUser();
 
@@ -118,7 +118,7 @@ router.patch('/update/:user_id', async (req: Request, res: Response) => {
   }
 });
 
-router.delete('/delete/:user_id', async (req: Request, res: Response) => {
+router.delete('/delete/:user_id', async (req: Request, res: Response): Promise<Response<string>> => {
   try {
     const user = await deleteUser();
 

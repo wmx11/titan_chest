@@ -1,14 +1,14 @@
 module.exports = [
   {
-    script: 'index.js',
+    script: './build/index.js',
     name: 'titan-chest-server',
   },
   {
-    script: 'cron.js',
+    script: './build/cron.js',
     name: 'add-stats-job',
   },
   {
-    script: 'src/discord/index.js',
+    script: './build/src/discord/index.js',
     name: 'discord',
   },
 ];

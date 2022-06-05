@@ -15,4 +15,4 @@ RUN npx prisma generate
 
 EXPOSE 2000
 
-CMD ["pm2-runtime", "ecosystem.config.js"]
+CMD ["pm2-runtime", "./build/ecosystem.config.js"]

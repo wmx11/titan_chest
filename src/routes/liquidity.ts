@@ -1,3 +1,4 @@
+import { Liquidity } from '@prisma/client';
 import { Router, Request, Response } from 'express';
 import {
   addLiquidityPool,
@@ -10,9 +11,9 @@ import { authToken } from '../middlewares/authThoken';
 
 const router = Router();
 
-router.get('/get', async (req: Request, res: Response) => {
+router.get('/get', async (req: Request, res: Response): Promise<Response<string>> => {
   try {
-    const liquidityPools = await getAllLiquidityPools();
+    const liquidityPools: Liquidity[] = await getAllLiquidityPools();
 
     return res.json({
       success: true,
@@ -28,9 +29,9 @@ router.get('/get', async (req: Request, res: Response) => {
   }
 });
 
-router.get('/get/:liquidity_id', async (req: Request, res: Response) => {
+router.get('/get/:liquidity_id', async (req: Request, res: Response): Promise<Response<string>> => {
   try {
-    const liquidityPool = await getLiquidityPoolById(parseInt(req.params.liquidity_id, 10));
+    const liquidityPool: Liquidity | null = await getLiquidityPoolById(parseInt(req.params.liquidity_id, 10));
 
     return res.json({
       success: true,
@@ -46,9 +47,9 @@ router.get('/get/:liquidity_id', async (req: Request, res: Response) => {
   }
 });
 
-router.post('/add', authToken, async (req: Request, res: Response) => {
+router.post('/add', authToken, async (req: Request, res: Response): Promise<Response<string>> => {
   try {
-    const entry = await addLiquidityPool(req.body);
+    const entry: Liquidity | null = await addLiquidityPool(req.body);
 
     return res.json({
       success: true,
@@ -68,9 +69,9 @@ router.post('/add', authToken, async (req: Request, res: Response) => {
   }
 });
 
-router.patch('/update/:liquidity_id', authToken, async (req: Request, res: Response) => {
+router.patch('/update/:liquidity_id', authToken, async (req: Request, res: Response): Promise<Response<string>> => {
   try {
-    const liquidityPool = await updateLiquidityPool(parseInt(req.params.liquidity_id, 10), req.body);
+    const liquidityPool: Liquidity | null = await updateLiquidityPool(parseInt(req.params.liquidity_id, 10), req.body);
 
     return res.json({
       success: true,
@@ -90,9 +91,9 @@ router.patch('/update/:liquidity_id', authToken, async (req: Request, res: Respo
   }
 });
 
-router.delete('/delete/:liquidity_id', authToken, async (req: Request, res: Response) => {
+router.delete('/delete/:liquidity_id', authToken, async (req: Request, res: Response): Promise<Response<string>> => {
   try {
-    const liquidityPool = await deleteLiquidityPool(parseInt(req.params.liquidity_id, 10));
+    const liquidityPool: Liquidity | null = await deleteLiquidityPool(parseInt(req.params.liquidity_id, 10));
 
     return res.json({
       success: true,

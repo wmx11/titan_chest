@@ -1,16 +1,15 @@
-import { PrismaClient } from '@prisma/client';
-import { Token } from '../types/Token';
+import { PrismaClient, Token } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-export const getAllTokens = async () => {
-  const tokens = await prisma.token.findMany();
+export const getAllTokens = async (): Promise<Token[]> => {
+  const tokens: Token[] = await prisma.token.findMany();
 
   return tokens;
 };
 
-export const getTokenById = async (id: number) => {
-  const token = await prisma.token.findFirst({
+export const getTokenById = async (id: number): Promise<Token | null> => {
+  const token: Token | null = await prisma.token.findFirst({
     where: {
       id,
     },
@@ -19,16 +18,16 @@ export const getTokenById = async (id: number) => {
   return token;
 };
 
-export const addToken = async (token: Token) => {
-  const entry = await prisma.token.create({
+export const addToken = async (token: Token): Promise<Token | null> => {
+  const entry: Token | null = await prisma.token.create({
     data: { ...token },
   });
 
   return entry;
 };
 
-export const updateToken = async (id: number, token: Token) => {
-  const entry = await prisma.token.update({
+export const updateToken = async (id: number, token: Token): Promise<Token | null> => {
+  const entry: Token | null = await prisma.token.update({
     where: {
       id,
     },
@@ -40,8 +39,8 @@ export const updateToken = async (id: number, token: Token) => {
   return entry;
 };
 
-export const deleteToken = async (id: number) => {
-  const entry = await prisma.token.delete({
+export const deleteToken = async (id: number): Promise<Token | null> => {
+  const entry: Token | null = await prisma.token.delete({
     where: {
       id,
     },

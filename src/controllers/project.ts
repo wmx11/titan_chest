@@ -1,16 +1,15 @@
-import { PrismaClient } from '@prisma/client';
-import { Project } from '../types/Project';
+import { PrismaClient, Project } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-export const getAllProjects = async () => {
-  const projects = await prisma.project.findMany();
+export const getAllProjects = async (): Promise<Project[]> => {
+  const projects: Project[] = await prisma.project.findMany();
 
   return projects;
 };
 
-export const getProjectById = async (id: number) => {
-  const project = await prisma.project.findFirst({
+export const getProjectById = async (id: number): Promise<Project | null> => {
+  const project: Project | null = await prisma.project.findFirst({
     where: {
       id,
     },
@@ -19,16 +18,16 @@ export const getProjectById = async (id: number) => {
   return project;
 };
 
-export const addProject = async (project: Project) => {
-  const entry = await prisma.project.create({
+export const addProject = async (project: Project): Promise<Project | null> => {
+  const entry: Project | null = await prisma.project.create({
     data: { ...project },
   });
 
   return entry;
 };
 
-export const updateProject = async (id: number, project: Project) => {
-  const entry = await prisma.project.update({
+export const updateProject = async (id: number, project: Project): Promise<Project | null> => {
+  const entry: Project | null = await prisma.project.update({
     where: {
       id,
     },
@@ -40,8 +39,8 @@ export const updateProject = async (id: number, project: Project) => {
   return entry;
 };
 
-export const deleteProject = async (id: number) => {
-  const entry = await prisma.project.delete({
+export const deleteProject = async (id: number): Promise<Project | null> => {
+  const entry: Project | null = await prisma.project.delete({
     where: {
       id,
     },

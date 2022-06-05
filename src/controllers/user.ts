@@ -1,15 +1,16 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, User } from '@prisma/client';
 import jwt from 'jsonwebtoken';
+import { Response } from '../types/Response';
 
-import { User } from '../types/User';
+import { UserNamePassword, UserLoginState } from '../types/User';
 import { comparePassword, hashPassword } from '../utils/helpers';
 
 const prisma = new PrismaClient();
 
-export const login = async (user: User) => {
+export const login = async (user: UserNamePassword): Promise<UserLoginState | Response> => {
   const { name, password } = user;
 
-  const existingUser = await prisma.user.findFirst({
+  const existingUser: User | null = await prisma.user.findFirst({
     where: {
       name,
     },
@@ -22,14 +23,15 @@ export const login = async (user: User) => {
     };
   }
 
-  const isPasswordMatching = comparePassword(password, existingUser.password);
+  const isPasswordMatching: boolean = comparePassword(password, existingUser.password);
 
   if (isPasswordMatching) {
-    const secret = process.env.ACCESS_TOKEN_SECRET || 'secret';
-    const accessToken = jwt.sign({ name }, secret, { expiresIn: '30 minutes' });
+    const secret: string = process.env.ACCESS_TOKEN_SECRET || 'secret';
+    const accessToken: string = jwt.sign({ name }, secret, { expiresIn: '30 minutes' });
 
     return {
       status: 200,
+      message: 'Login successful',
       user: {
         id: existingUser.id,
         name: existingUser.name,
@@ -44,10 +46,10 @@ export const login = async (user: User) => {
   };
 };
 
-export const register = async (user: User) => {
+export const register = async (user: UserNamePassword): Promise<Response> => {
   const { name, password } = user;
 
-  const existingUser = await prisma.user.findFirst({
+  const existingUser: User | null = await prisma.user.findFirst({
     where: {
       name,
     },
@@ -60,7 +62,7 @@ export const register = async (user: User) => {
     };
   }
 
-  const hashedPassword = hashPassword(password);
+  const hashedPassword: string = hashPassword(password);
 
   await prisma.user.create({
     data: {
@@ -75,7 +77,7 @@ export const register = async (user: User) => {
   };
 };
 
-export const getAllUsers = async () => {
+export const getAllUsers = async (): Promise<object> => {
   return {
     message: 'lmao',
   };

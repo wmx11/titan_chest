@@ -1,16 +1,15 @@
-import { PrismaClient } from '@prisma/client';
-import { Liquidity } from '../types/Liquidity';
+import { Liquidity, PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-export const getAllLiquidityPools = async () => {
-  const liquidity = await prisma.liquidity.findMany();
+export const getAllLiquidityPools = async (): Promise<Liquidity[]> => {
+  const liquidity: Liquidity[] = await prisma.liquidity.findMany();
 
   return liquidity;
 };
 
-export const getLiquidityPoolById = async (id: number) => {
-  const liquidity = await prisma.liquidity.findFirst({
+export const getLiquidityPoolById = async (id: number): Promise<Liquidity | null> => {
+  const liquidity: Liquidity | null = await prisma.liquidity.findFirst({
     where: {
       id,
     },
@@ -19,13 +18,11 @@ export const getLiquidityPoolById = async (id: number) => {
   return liquidity;
 };
 
-type Payload = {
+export const getLiquidityPoolByProjectOrTokenId = async (payload: {
   type: string;
   id: number;
-};
-
-export const getLiquidityPoolByProjectOrTokenId = async (payload: Payload) => {
-  const liquidity = await prisma.liquidity.findFirst({
+}): Promise<Liquidity | null> => {
+  const liquidity: Liquidity | null = await prisma.liquidity.findFirst({
     where: {
       [payload.type]: payload.id,
     },
@@ -34,16 +31,16 @@ export const getLiquidityPoolByProjectOrTokenId = async (payload: Payload) => {
   return liquidity;
 };
 
-export const addLiquidityPool = async (liquidity: Liquidity) => {
-  const entry = await prisma.liquidity.create({
+export const addLiquidityPool = async (liquidity: Liquidity): Promise<Liquidity | null> => {
+  const entry: Liquidity | null = await prisma.liquidity.create({
     data: { ...liquidity },
   });
 
   return entry;
 };
 
-export const updateLiquidityPool = async (id: number, liquidity: Liquidity) => {
-  const entry = await prisma.liquidity.update({
+export const updateLiquidityPool = async (id: number, liquidity: Liquidity): Promise<Liquidity | null> => {
+  const entry: Liquidity | null = await prisma.liquidity.update({
     where: {
       id,
     },
@@ -55,8 +52,8 @@ export const updateLiquidityPool = async (id: number, liquidity: Liquidity) => {
   return entry;
 };
 
-export const deleteLiquidityPool = async (id: number) => {
-  const entry = await prisma.liquidity.delete({
+export const deleteLiquidityPool = async (id: number): Promise<Liquidity | null> => {
+  const entry: Liquidity | null = await prisma.liquidity.delete({
     where: {
       id,
     },

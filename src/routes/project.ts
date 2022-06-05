@@ -1,12 +1,13 @@
+import { Project } from '@prisma/client';
 import { Router, Request, Response } from 'express';
 import { addProject, deleteProject, getAllProjects, getProjectById, updateProject } from '../controllers/project';
 import { authToken } from '../middlewares/authThoken';
 
 const router = Router();
 
-router.get('/get', async (req: Request, res: Response) => {
+router.get('/get', async (req: Request, res: Response): Promise<Response<string>> => {
   try {
-    const projects = await getAllProjects();
+    const projects: Project[] = await getAllProjects();
 
     return res.json({
       success: true,
@@ -22,9 +23,9 @@ router.get('/get', async (req: Request, res: Response) => {
   }
 });
 
-router.get('/get/:project_id', async (req: Request, res: Response) => {
+router.get('/get/:project_id', async (req: Request, res: Response): Promise<Response<string>> => {
   try {
-    const project = await getProjectById(parseInt(req.params.project_id, 10));
+    const project: Project | null = await getProjectById(parseInt(req.params.project_id, 10));
 
     return res.json({
       success: true,
@@ -40,9 +41,9 @@ router.get('/get/:project_id', async (req: Request, res: Response) => {
   }
 });
 
-router.post('/add', authToken, async (req: Request, res: Response) => {
+router.post('/add', authToken, async (req: Request, res: Response): Promise<Response<string>> => {
   try {
-    const entry = await addProject(req.body);
+    const entry: Project | null = await addProject(req.body);
 
     return res.json({
       success: true,
@@ -62,9 +63,9 @@ router.post('/add', authToken, async (req: Request, res: Response) => {
   }
 });
 
-router.patch('/update/:project_id', authToken, async (req: Request, res: Response) => {
+router.patch('/update/:project_id', authToken, async (req: Request, res: Response): Promise<Response<string>> => {
   try {
-    const project = await updateProject(parseInt(req.params.project_id, 10), req.body);
+    const project: Project | null = await updateProject(parseInt(req.params.project_id, 10), req.body);
 
     return res.json({
       success: true,
@@ -84,9 +85,9 @@ router.patch('/update/:project_id', authToken, async (req: Request, res: Respons
   }
 });
 
-router.delete('/delete/:project_id', authToken, async (req: Request, res: Response) => {
+router.delete('/delete/:project_id', authToken, async (req: Request, res: Response): Promise<Response<string>> => {
   try {
-    const project = await deleteProject(parseInt(req.params.project_id, 10));
+    const project: Project | null = await deleteProject(parseInt(req.params.project_id, 10));
 
     return res.json({
       success: true,

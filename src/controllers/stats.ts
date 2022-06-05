@@ -28,8 +28,6 @@ export const getProjectStatsById = async (payload: Payload): Promise<Stats[]> =>
     const { query, generateComputedFields } = statsQuery;
     const stats: Stats[] | null = await prisma.stats.findMany({ ...(query as object) });
     const withComputedFields = generateComputedFields(payload, stats);
-    console.log(withComputedFields);
-    
     return withComputedFields;
   }
 

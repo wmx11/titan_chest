@@ -1,12 +1,13 @@
+import { Network } from '@prisma/client';
 import { Router, Request, Response } from 'express';
 import { addNetwork, deleteNetwork, getAllNetworks, getNetworkById, updateNetwork } from '../controllers/network';
 import { authToken } from '../middlewares/authThoken';
 
 const router = Router();
 
-router.get('/get', async (req: Request, res: Response) => {
+router.get('/get', async (req: Request, res: Response): Promise<Response<string>> => {
   try {
-    const networks = await getAllNetworks();
+    const networks: Network[] = await getAllNetworks();
 
     return res.json({
       success: true,
@@ -22,9 +23,9 @@ router.get('/get', async (req: Request, res: Response) => {
   }
 });
 
-router.get('/get/:network_id', async (req: Request, res: Response) => {
+router.get('/get/:network_id', async (req: Request, res: Response): Promise<Response<string>> => {
   try {
-    const network = await getNetworkById(parseInt(req.params.network_id, 10));
+    const network: Network | null = await getNetworkById(parseInt(req.params.network_id, 10));
 
     return res.json({
       success: true,
@@ -40,9 +41,9 @@ router.get('/get/:network_id', async (req: Request, res: Response) => {
   }
 });
 
-router.post('/add', authToken, async (req: Request, res: Response) => {
+router.post('/add', authToken, async (req: Request, res: Response): Promise<Response<string>> => {
   try {
-    const entry = await addNetwork(req.body);
+    const entry: Network | null = await addNetwork(req.body);
 
     return res.json({
       success: true,
@@ -62,9 +63,9 @@ router.post('/add', authToken, async (req: Request, res: Response) => {
   }
 });
 
-router.patch('/update/:network_id', authToken, async (req: Request, res: Response) => {
+router.patch('/update/:network_id', authToken, async (req: Request, res: Response): Promise<Response<string>> => {
   try {
-    const network = await updateNetwork(parseInt(req.params.network_id, 10), req.body);
+    const network: Network | null = await updateNetwork(parseInt(req.params.network_id, 10), req.body);
 
     return res.json({
       success: true,
@@ -84,9 +85,9 @@ router.patch('/update/:network_id', authToken, async (req: Request, res: Respons
   }
 });
 
-router.delete('/delete/:network_id', authToken, async (req: Request, res: Response) => {
+router.delete('/delete/:network_id', authToken, async (req: Request, res: Response): Promise<Response<string>> => {
   try {
-    const network = await deleteNetwork(parseInt(req.params.network_id, 10));
+    const network: Network | null = await deleteNetwork(parseInt(req.params.network_id, 10));
 
     return res.json({
       success: true,

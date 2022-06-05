@@ -1,12 +1,11 @@
-export type Stats = {
-  name?: string;
-  project_id: number;
-  price?: number;
-  marketcap?: number;
-  holders?: number;
-  pair_price?: number;
-  liquidity?: number;
-  average_holdings?: number;
-  treasury?: number;
-  rfv?: number;
+import { Prisma } from '@prisma/client';
+
+export type Payload = {
+  type: string | null;
+  value: string | number | null;
+  last_day?: string | string[] | null;
+  limit?: string | null;
+  select?: string | null;
+  order?: Prisma.SortOrder | null;
+  compute?: string | null;
 };

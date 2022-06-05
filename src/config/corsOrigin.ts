@@ -1,4 +1,4 @@
-const corsOrigin = [
+const corsOrigin: string[] = [
   'http://localhost:3000',
   'http://titan-chest-ui:3000',
   'http://titan-chest-api:2000',

@@ -14,6 +14,14 @@ const getLastDayQuery = (): { created_at: { lte: Date } } => {
   };
 };
 
+const getFromDateQuery = (date: string): { created_at: { gte: Date } } => {
+  return {
+    created_at: {
+      gte: new Date(date),
+    },
+  };
+};
+
 const getSelections = (select: string): object | Record<string, never> => {
   if (!select) {
     return {};
@@ -39,21 +47,29 @@ const getSelections = (select: string): object | Record<string, never> => {
 };
 
 const constructQuery = (payload: Payload): DynamicQueryType | Record<string, never> => {
-  const query = {};
+  const query: Record<string, never> = {};
 
   if (!payload) {
     return query;
   }
 
   // Add initial take: 1 and OrdereBy
-  Object.assign(query, { take: 1, orderBy: [{ created_at: 'desc' }] });
+  Object.assign(query, {
+    take: 1,
+    orderBy: [{ created_at: 'desc' }],
+    where: { [payload.type as string]: payload.value },
+  });
 
   if (payload.type && payload.value) {
-    Object.assign(query, { where: { [payload.type]: payload.value } });
+    Object.assign(query.where, { [payload.type]: payload.value });
   }
 
   if (payload.last_day) {
-    Object.assign(query, { where: { ...getLastDayQuery() } });
+    Object.assign(query.where, { ...getLastDayQuery() });
+  }
+
+  if (payload.from) {
+    Object.assign(query.where, { ...getFromDateQuery(payload.from) });
   }
 
   if (payload.limit) {

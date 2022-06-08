@@ -25,7 +25,7 @@ export const getProjectStatsById = async (payload: Payload): Promise<Stats[]> =>
   }
 
   if (statsQuery) {
-    const { query, generateComputedFields } = statsQuery;
+    const { query, generateComputedFields } = statsQuery;    
     const stats: Stats[] | null = await prisma.stats.findMany({ ...(query as object) });
     const withComputedFields = generateComputedFields(payload, stats);
     return withComputedFields;

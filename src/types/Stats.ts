@@ -8,4 +8,5 @@ export type Payload = {
   select?: string | null;
   order?: Prisma.SortOrder | null;
   compute?: string | null;
+  from?: string | null;
 };

@@ -18,7 +18,7 @@ export const addProjectStats = async (stats: Stats): Promise<Stats | null> => {
 };
 
 export const getProjectStatsById = async (payload: Payload): Promise<Stats[]> => {
-  const statsQuery: DynamicQueryType | Record<string, never> = constructDynamicQuery(payload, 'stats');
+  const statsQuery: DynamicQueryType | Record<string, never> = constructDynamicQuery(payload);
 
   if (!statsQuery) {
     return [];

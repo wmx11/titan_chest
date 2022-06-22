@@ -1,4 +1,7 @@
 import { PrismaClient, Project } from '@prisma/client';
+import constructDynamicQuery from '../services/constructDynamicQuery';
+import { DynamicQueryType } from '../types/ComputedFields';
+import { Payload } from '../types/Stats';
 
 const prisma = new PrismaClient();
 
@@ -8,11 +11,15 @@ export const getAllProjects = async (): Promise<Project[]> => {
   return projects;
 };
 
-export const getProjectById = async (id: number): Promise<Project | null> => {
+export const getProjectById = async (payload: Payload): Promise<Project | null> => {
+  const statsQuery: DynamicQueryType | Record<string, never> = constructDynamicQuery(payload);
+
+  if (!statsQuery) {
+    return null;
+  }
+
   const project: Project | null = await prisma.project.findFirst({
-    where: {
-      id,
-    },
+    ...(statsQuery.query as object),
   });
 
   return project;

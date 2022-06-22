@@ -125,7 +125,7 @@ const generateComputedFields = (payload: Payload, results: Stats[] | null): Stat
   });
 };
 
-const forStats = (payload: Payload): DynamicQueryType | Record<string, never> => {
+const getDynamicQuery = (payload: Payload): DynamicQueryType | Record<string, never> => {
   const query: DynamicQueryType | Record<string, never> = constructQuery(payload);
 
   if (!query) {
@@ -138,13 +138,8 @@ const forStats = (payload: Payload): DynamicQueryType | Record<string, never> =>
   };
 };
 
-const constructDynamicQuery = (payload: Payload, type: string): DynamicQueryType | Record<string, never> => {
-  switch (type) {
-    case 'stats':
-      return forStats(payload);
-    default:
-      return {};
-  }
+const constructDynamicQuery = (payload: Payload): DynamicQueryType | Record<string, never> => {
+  return getDynamicQuery(payload);
 };
 
 export default constructDynamicQuery;

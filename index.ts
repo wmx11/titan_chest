@@ -11,6 +11,7 @@ import networkRoute from './src/routes/network';
 import tokenRoute from './src/routes/token';
 import userRoute from './src/routes/user';
 import botsRoute from './src/routes/bots';
+import accountRoute from './src/routes/account';
 import corsOrigin from './src/config/corsOrigin';
 
 const app: Application = express();
@@ -28,7 +29,7 @@ app.use(
 
 const port: number | string = process.env.PORT || 3000;
 
-const { stats, project, abi, liquidity, network, token, user, bots } = routes;
+const { stats, project, abi, liquidity, network, token, user, bots, account } = routes;
 
 app.use(stats, statsRoute);
 app.use(project, projectRoute);
@@ -38,6 +39,7 @@ app.use(network, networkRoute);
 app.use(token, tokenRoute);
 app.use(user, userRoute);
 app.use(bots, botsRoute);
+app.use(account, accountRoute);
 
 app.listen(port, () => {
   console.log(`Titan Chest API server started on port ${port}`);

@@ -2,6 +2,7 @@ import { Project } from '@prisma/client';
 import { Router, Request, Response } from 'express';
 import { addProject, deleteProject, getAllProjects, getProjectById, updateProject } from '../controllers/project';
 import { authToken } from '../middlewares/authThoken';
+import { Payload } from '../types/Stats';
 
 const router = Router();
 
@@ -25,7 +26,15 @@ router.get('/get', async (req: Request, res: Response): Promise<Response<string>
 
 router.get('/get/:project_id', async (req: Request, res: Response): Promise<Response<string>> => {
   try {
-    const project: Project | null = await getProjectById(parseInt(req.params.project_id, 10));
+    const projectId = parseInt(req.params.project_id, 10);
+
+    const payload: Payload = {
+      type: projectId ? 'project_id' : 'name',
+      value: projectId || req.params.project_id,
+      ...(req.query as Omit<Payload, 'type' | 'value'>),
+    };
+
+    const project: Project | null = await getProjectById(payload);
 
     return res.json({
       success: true,
